@@ -48,14 +48,14 @@ cp /etc/nginx/nginx.conf /etc/nginx/nginx-conf.old
 #
 # Replace nginx.conf
 #
-wget https://raw.githubusercontent.com/juliosene/azure-nginx-php/master/templates/nginx.conf
+wget https://raw.githubusercontent.com/juliosene/azure-nginx-php-mariadb-cluster/master/files/nginx.conf
 
 sed -i "s/#WORKER#/$WORKER/g" nginx.conf
 mv nginx.conf /etc/nginx/
 
 # replace Nginx default.conf
 #
-wget https://raw.githubusercontent.com/juliosene/azure-nginx-php/master/templates/default.conf
+wget https://raw.githubusercontent.com/juliosene/azure-nginx-php-mariadb-cluster/master/files/default.conf
 
 #sed -i "s/#WORKER#/$WORKER/g" nginx.conf
 mv default.conf /etc/nginx/conf.d/
@@ -65,7 +65,7 @@ apt-get install -fy php-pear
 apt-get install -fy php5-dev
 printf "\n" |pecl install -f memcache
 #
-wget https://raw.githubusercontent.com/juliosene/azure-nginx-php/master/templates/memcache.ini
+wget https://raw.githubusercontent.com/juliosene/azure-nginx-php-mariadb-cluster/master/files/memcache.ini
 
 #sed -i "s/#WORKER#/$WORKER/g" memcache.ini
 mv memcache.ini /etc/php5/mods-available/

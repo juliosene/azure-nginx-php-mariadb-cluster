@@ -23,10 +23,10 @@ done
 
 cd ~
 apt-get update
-apt-get install -f
-apt-get upgrade -fy
-#apt-get dist-upgrade -fy
-dpkg --configure --force-confnew -a
+apt-get install -f -y
+# apt-get upgrade -f -y
+#apt-get dist-upgrade -f -y
+# dpkg --configure --force-confnew -a
 
 apt-get install lsb-release bc
 REL=`lsb_release -sc`

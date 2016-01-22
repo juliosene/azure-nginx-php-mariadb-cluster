@@ -81,7 +81,7 @@ mount -t cifs //$SharedStorageAccountName.file.core.windows.net/$SharedAzureFile
 # Edit default page to show php info
 #
 #mv /usr/share/nginx/html/index.html /usr/share/nginx/html/index.php
-echo -e "<html><title>Azure Nginx PHP</title><body><h2>Your Nginx and PHP are installed!</h1></br>\n<?php\nphpinfo();\n?></body>" > /usr/share/nginx/html/index.php
+echo -e "<html><title>Azure Nginx PHP</title><body><h2>Your Nginx and PHP are running!</h1></br>\n<?php\nphpinfo();\n?></body>" > /usr/share/nginx/html/index.php
 #
 # Services restart
 #

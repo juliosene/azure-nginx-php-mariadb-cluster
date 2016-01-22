@@ -73,7 +73,7 @@ if [ "$FIRSTNODE" = "$MYIP" ];
 then
     service mysql start --wsrep-new-cluster
 else
-    service mysql start --wsrep_cluster_address=gcomm://$FIRSTNODE
+    service mysql start
 fi
 
 # To check cluster use the command below

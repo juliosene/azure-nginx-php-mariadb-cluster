@@ -265,7 +265,7 @@
               "priority": 100,
               "direction": "Inbound"
             }
-          }
+          },
           {
             "name": "Tools",
             "properties": {
@@ -439,8 +439,8 @@
               "backendPort": 80,
               "idleTimeoutInMinutes": 15
             }
-          }
-         {
+          },
+          {
             "name": "toosRule",
             "properties": {
               "frontendIPConfiguration": {
@@ -468,8 +468,8 @@
               "numberOfProbes": 2
             },
             "name": "lbWebProbe"
-          }
-         {
+          },
+          {
             "properties": {
               "protocol": "Tcp",
               "port": 8888,

@@ -1,7 +1,8 @@
 #!/bin/bash
 #
+SECURITY=`date +%D%A%B | md5sum| sha256sum | base64| fold -w16| head -n1`
 cd ~
-apt-get install apache2-utils -f -y
+apt-get install apache2-utils unzip -f -y
 
 htpasswd -c -b /usr/share/nginx/html/.htpasswd $1 $2
 
@@ -14,10 +15,18 @@ cd /usr/share/nginx/html/tools
 wget http://sourceforge.net/projects/phpfm/files/phpFileManager/version%200.9.8/phpFileManager-0.9.8.zip/download
 unzip download
 mkdir filemanager
-mv index.php ./filemanager/
+mv index.php filemanager/
+mv LICENSE.html filemanager/
+
 wget https://files.phpmyadmin.net/phpMyAdmin/4.5.3.1/phpMyAdmin-4.5.3.1-all-languages.zip
 unzip phpMyAdmin-4.5.3.1-all-languages.zip
 mv phpMyAdmin-4.5.3.1-all-languages phpmyadmin
+
+rm -Rf download phpMyAdmin-4.5.3.1-all-languages.zip
+
+wget https://raw.githubusercontent.com/juliosene/azure-nginx-php-mariadb-cluster/master/tools/config.inc.php
+mv config.inc.php /usr/share/nginx/html/tools/phpmyadmin/
+sed -i "s/#SECURITY#/$SECURITY/g" /usr/share/nginx/html/tools/phpmyadmin/config.inc.php
 
 service nginx reload
 

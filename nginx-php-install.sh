@@ -32,7 +32,7 @@ apt-get -y install nodejs-legacy
 apt-get -y install npm
 npm install -g azure-cli
 
-sudo azure storage share create $SharedAzureFileName -a $SharedStorageAccountName -k $SharedStorageAccountKey
+azure storage share create $SharedAzureFileName -a $SharedStorageAccountName -k $SharedStorageAccountKey
 fi
 
 apt-get install -fy nginx

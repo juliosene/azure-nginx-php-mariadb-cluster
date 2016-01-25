@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 cd ~
-apt-get install apache2-utils
+apt-get install apache2-utils -f -y
 
 htpasswd -c -b /usr/share/nginx/html/.htpasswd $1 $2
 

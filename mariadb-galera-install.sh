@@ -22,29 +22,29 @@ do
 done
 
 cd ~
-apt-get update
-apt-get install -f -y
+apt-get update > /dev/null
+apt-get install -f -y > /dev/null
 # apt-get upgrade -f -y
 #apt-get dist-upgrade -f -y
 # dpkg --configure --force-confnew -a
 
-apt-get install lsb-release bc
+apt-get install lsb-release bc > /dev/null
 REL=`lsb_release -sc`
 DISTRO=`lsb_release -is | tr [:upper:] [:lower:]`
 # NCORES=` cat /proc/cpuinfo | grep cores | wc -l`
 # WORKER=`bc -l <<< "4*$NCORES"`
 
-apt-get install -y --fix-missing python-software-properties
+apt-get install -y --fix-missing python-software-properties > /dev/null
 apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xcbcb082a1bb943db
 add-apt-repository "deb http://mirror.edatel.net.co/mariadb/repo/10.1/$DISTRO $REL main"
 
-apt-get update
+apt-get update > /dev/null
 
 DEBIAN_FRONTEND=noninteractive apt-get install -y rsync mariadb-server
 
 # Remplace Debian maintenance config file
 
-wget https://raw.githubusercontent.com/juliosene/azure-nginx-php-mariadb-cluster/master/files/debian.cnf
+wget https://raw.githubusercontent.com/juliosene/azure-nginx-php-mariadb-cluster/master/files/debian.cnf > /dev/null
 
 sed -i "s/#PASSWORD#/$DEBPASSWORD/g" debian.cnf
 mv debian.cnf /etc/mysql/
@@ -70,7 +70,7 @@ service mysql stop
 
 # create Galera config file
 
-wget https://raw.githubusercontent.com/juliosene/azure-nginx-php-mariadb-cluster/master/files/cluster.cnf
+wget https://raw.githubusercontent.com/juliosene/azure-nginx-php-mariadb-cluster/master/files/cluster.cnf > /dev/null
 
 sed -i "s/#wsrep_on=ON/wsrep_on=ON/g;s/IPLIST/$IPLIST/g;s/MYIP/$MYIP/g;s/MYNAME/$MYNAME/g;s/CLUSTERNAME/$CNAME/g" cluster.cnf
 mv cluster.cnf /etc/mysql/conf.d/
@@ -79,9 +79,9 @@ mv cluster.cnf /etc/mysql/conf.d/
 
 if [ "$FIRSTNODE" = "$MYIP" ];
 then
-    service mysql start --wsrep-new-cluster
+    service mysql start --wsrep-new-cluster > /dev/null
 else
-    service mysql start
+    service mysql start > /dev/null
 fi
 
 # To check cluster use the command below

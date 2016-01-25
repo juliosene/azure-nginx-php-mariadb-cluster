@@ -28,6 +28,6 @@ wget https://raw.githubusercontent.com/juliosene/azure-nginx-php-mariadb-cluster
 mv config.inc.php /usr/share/nginx/html/tools/phpmyadmin/
 sed -i "s/#SECURITY#/$SECURITY/g" /usr/share/nginx/html/tools/phpmyadmin/config.inc.php
 
-service nginx reload
+service nginx restart
 
 

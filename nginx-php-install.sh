@@ -22,14 +22,15 @@ add-apt-repository "deb-src http://nginx.org/packages/$DISTRO/ $REL nginx"
 
 apt-get update
 
+apt-get install -y -f cifs-utils
 
 # Create Azure file shere if is the first VM
 if [ $OPTION -lt 1 ]; 
 then  
 # Create Azure file share that will be used by front end VM's for moodledata directory
 
-apt-get -y install nodejs-legacy
-apt-get -y install npm
+apt-get -y -f install nodejs-legacy
+apt-get -y -f install npm
 npm install -g azure-cli
 
 azure storage share create $SharedAzureFileName -a $SharedStorageAccountName -k $SharedStorageAccountKey
@@ -74,7 +75,7 @@ mv memcache.ini /etc/php5/mods-available/
  
  # mount share file on /usr/share/nginx/html
 
-apt-get install cifs-utils
+# azure storage share list $SharedAzureFileName -a $SharedStorageAccountName -k $SharedStorageAccountKey |grep -q 'html' && echo 'yes'
 mount -t cifs //$SharedStorageAccountName.file.core.windows.net/$SharedAzureFileName /usr/share/nginx/html -o uid=$(id -u nginx),vers=2.1,username=$SharedStorageAccountName,password=$SharedStorageAccountKey,dir_mode=0770,file_mode=0770
 
 #

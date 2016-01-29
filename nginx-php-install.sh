@@ -38,9 +38,9 @@ azure storage share create $SharedAzureFileName -a $SharedStorageAccountName -k 
 # do
 if [ "`azure storage share list $SharedAzureFileName -a $SharedStorageAccountName -k $SharedStorageAccountKey |grep -q 'html' && echo 'yes'`" != "yes" ];
 then
-        sleep 5
+#        sleep 5
         if hash azure 2>/dev/null; then
-             apt-get -y -f install npm
+#             apt-get -y -f install npm
              npm install -g azure-cli
         fi
 

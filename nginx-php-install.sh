@@ -46,7 +46,7 @@ if [ "`azure storage share list $SharedAzureFileName -a $SharedStorageAccountNam
 then
         azure storage share create $SharedAzureFileName -a $SharedStorageAccountName -k $SharedStorageAccountKey
 # done
-
+fi
 fi
 
 apt-get install -fy nginx

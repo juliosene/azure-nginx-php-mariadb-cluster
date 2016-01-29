@@ -33,19 +33,18 @@ apt-get -y -f install nodejs-legacy
 apt-get -y -f install npm
 npm install -g azure-cli
 
+if hash azure 2>/dev/null; then
+        sleep 2
+#       apt-get -y -f install npm
+        npm install -g azure-cli
+fi
+
 azure storage share create $SharedAzureFileName -a $SharedStorageAccountName -k $SharedStorageAccountKey
 # while [ "`azure storage share list $SharedAzureFileName -a $SharedStorageAccountName -k $SharedStorageAccountKey |grep -q 'html' && echo 'yes'`" != "yes" ]
 # do
 if [ "`azure storage share list $SharedAzureFileName -a $SharedStorageAccountName -k $SharedStorageAccountKey |grep -q 'html' && echo 'yes'`" != "yes" ];
 then
-#        sleep 5
-        if hash azure 2>/dev/null; then
-#             apt-get -y -f install npm
-             npm install -g azure-cli
-        fi
-
         azure storage share create $SharedAzureFileName -a $SharedStorageAccountName -k $SharedStorageAccountKey
-fi
 # done
 
 fi

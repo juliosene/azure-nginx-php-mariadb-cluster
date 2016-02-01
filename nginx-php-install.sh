@@ -91,6 +91,10 @@ mv memcache.ini /etc/php5/mods-available/
 # azure storage share list $SharedAzureFileName -a $SharedStorageAccountName -k $SharedStorageAccountKey |grep -q 'html' && echo 'yes'
 mount -t cifs //$SharedStorageAccountName.file.core.windows.net/$SharedAzureFileName /usr/share/nginx/html -o uid=$(id -u nginx),vers=2.1,username=$SharedStorageAccountName,password=$SharedStorageAccountKey,dir_mode=0770,file_mode=0770
 
+#add mount to /etc/fstab to persist across reboots
+chmod 770 /etc/fstab
+echo "//$SharedStorageAccountName.file.core.windows.net/$SharedAzureFileName /usr/share/nginx/html cifs uid=$(id -u nginx),vers=3.0,username=$SharedStorageAccountName,password=$SharedStorageAccountKey,dir_mode=0770,file_mode=0770" >> /etc/fstab
+
 #
 # Edit default page to show php info
 #

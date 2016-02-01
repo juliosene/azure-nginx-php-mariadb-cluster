@@ -75,6 +75,13 @@ wget https://raw.githubusercontent.com/juliosene/azure-nginx-php-mariadb-cluster
 sed -i "s/#wsrep_on=ON/wsrep_on=ON/g;s/IPLIST/$IPLIST/g;s/MYIP/$MYIP/g;s/MYNAME/$MYNAME/g;s/CLUSTERNAME/$CNAME/g" cluster.cnf
 mv cluster.cnf /etc/mysql/conf.d/
 
+# Create a raid 
+wget https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/shared_scripts/ubuntu/vm-disk-utils-0.1.sh
+bash vm-disk-utils-0.1.sh -s
+mkdir /datadisks/disk1/data
+cp -R -p /var/lib/mysql /datadisks/disk1/data/
+sed -i "s,/var/lib/mysql,/datadisks/disk1/data/mysql,g" /etc/mysql/my.cnf
+
 # Starts a cluster if is the first node
 
 if [ "$FIRSTNODE" = "$MYIP" ];

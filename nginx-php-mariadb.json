@@ -147,6 +147,7 @@
     "imagePublisher": "Canonical",
     "imageOffer": "UbuntuServer",
     "OSDiskName": "osdiskforlinuxsimple",
+    "DataDiskName": "datakisklinux",
     "nicName": "[concat(parameters('vmName'),'-Nic')]",
     "nicNameDB": "[concat(parameters('vmName'),'-NicDB')]",
     "subnetName": "Subnet",
@@ -158,7 +159,7 @@
     "subnetPrefix3": "[concat(variables('subnetIPBase'),'192/26')]",
     "vhdStorageType": "Standard_LRS",
     "publicIPAddressType": "Dynamic",
-    "vhdStorageContainerName": "vhds",
+    "vhdStorageContainerName": "osvhds",
     "availabilitySetName": "[concat(parameters('vmName'), '-AvSet')]",
     "availabilitySetNameDB": "[concat('DB',variables('availabilitySetName'))]",
     "publicIPName": "[concat(parameters('vmName'),'-PubIP')]",
@@ -710,7 +711,27 @@
             },
             "caching": "ReadWrite",
             "createOption": "FromImage"
-          }
+          },
+          "dataDisks": [
+            {
+              "name": "datadisk1",
+              "diskSizeGB": "1000",
+              "lun": 0,
+              "vhd": {
+                "uri": "[concat('http://', variables('vhdDBStorageName'),'.blob.core.windows.net/vm', copyIndex(), 'lun/', variables('DataDiskName'), '01.vhd')]"
+              },
+              "createOption": "Empty"
+            },
+            {
+              "name": "datadisk2",
+              "diskSizeGB": "1000",
+              "lun": 1,
+              "vhd": {
+                "uri": "[concat('http://', variables('vhdDBStorageName'),'.blob.core.windows.net/vm', copyIndex(), 'lun/', variables('DataDiskName'), '02.vhd')]"
+              },
+              "createOption": "Empty"
+            }
+          ]
         },
         "networkProfile": {
           "networkInterfaces": [

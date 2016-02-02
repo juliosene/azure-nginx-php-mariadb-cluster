@@ -33,7 +33,7 @@ apt-get -y install nodejs-legacy
 apt-get -y install npm
 npm install -g azure-cli
 
-sudo azure storage share create $SharedAzureFileName -a $SharedStorageAccountName -k $SharedStorageAccountKey
+# sudo azure storage share create $SharedAzureFileName -a $SharedStorageAccountName -k $SharedStorageAccountKey
 
 fi
 
@@ -75,6 +75,13 @@ mv memcache.ini /etc/php5/mods-available/
  ln -s /etc/php5/mods-available/memcache.ini  /etc/php5/fpm/conf.d/20-memcache.ini
  
  # mount share file on /usr/share/nginx/html
+if [ $OPTION -lt 1 ]; 
+then  
+# Create Azure file share that will be used by front end VM's for moodledata directory
+
+sudo azure storage share create $SharedAzureFileName -a $SharedStorageAccountName -k $SharedStorageAccountKey
+
+fi
 
 # azure storage share list $SharedAzureFileName -a $SharedStorageAccountName -k $SharedStorageAccountKey |grep -q 'html' && echo 'yes'
 mount -t cifs //$SharedStorageAccountName.file.core.windows.net/$SharedAzureFileName /usr/share/nginx/html -o uid=$(id -u nginx),vers=2.1,username=$SharedStorageAccountName,password=$SharedStorageAccountKey,dir_mode=0770,file_mode=0770

@@ -29,24 +29,12 @@ if [ $OPTION -lt 1 ];
 then  
 # Create Azure file share that will be used by front end VM's for moodledata directory
 
-apt-get -y -f install nodejs-legacy
-apt-get -y -f install npm
+apt-get -y install nodejs-legacy
+apt-get -y install npm
 npm install -g azure-cli
 
-if hash azure 2>/dev/null; then
-        sleep 2
-#       apt-get -y -f install npm
-        npm install -g azure-cli
-fi
+sudo azure storage share create $SharedAzureFileName -a $SharedStorageAccountName -k $SharedStorageAccountKey
 
-azure storage share create $SharedAzureFileName -a $SharedStorageAccountName -k $SharedStorageAccountKey
-# while [ "`azure storage share list $SharedAzureFileName -a $SharedStorageAccountName -k $SharedStorageAccountKey |grep -q 'html' && echo 'yes'`" != "yes" ]
-# do
-if [ "`azure storage share list $SharedAzureFileName -a $SharedStorageAccountName -k $SharedStorageAccountKey |grep -q 'html' && echo 'yes'`" != "yes" ];
-then
-        azure storage share create $SharedAzureFileName -a $SharedStorageAccountName -k $SharedStorageAccountKey
-# done
-fi
 fi
 
 apt-get install -fy nginx

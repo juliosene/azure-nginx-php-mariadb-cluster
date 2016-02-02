@@ -29,7 +29,7 @@ if [ $OPTION -lt 1 ];
 then  
 # Create Azure file share that will be used by front end VM's for moodledata directory
 wget https://raw.githubusercontent.com/juliosene/azure-nginx-php-mariadb-cluster/master/create-file-share.sh
-bash create-file-share.sh $SharedStorageAccountName $SharedAzureFileName $SharedStorageAccountKey
+bash create-file-share.sh $SharedStorageAccountName $SharedAzureFileName $SharedStorageAccountKey > /root/create-file-share.log
 fi
 
 apt-get install -fy nginx

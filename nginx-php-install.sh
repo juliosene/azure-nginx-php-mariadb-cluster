@@ -14,6 +14,9 @@ OPTION=${1-2}
 SharedStorageAccountName=$2
 SharedAzureFileName=$3
 SharedStorageAccountKey=$4
+InstallTools=${5:-"no"}
+ToolsUser=$6
+ToolsPass=$7
 
 wget http://nginx.org/keys/nginx_signing.key
 apt-key add nginx_signing.key
@@ -84,6 +87,15 @@ echo "//$SharedStorageAccountName.file.core.windows.net/$SharedAzureFileName /us
 #mv /usr/share/nginx/html/index.html /usr/share/nginx/html/index.php
 mkdir /usr/share/nginx/html/web
 echo -e "<html><title>Azure Nginx PHP</title><body><h2>Your Nginx and PHP are running!</h1></br>\n<?php\nphpinfo();\n?></body>" > /usr/share/nginx/html/web/index.php
+#
+#
+# Install admin tools
+if [ $InstallTools == "yes" ];
+then
+   wget https://raw.githubusercontent.com/juliosene/azure-nginx-php-mariadb-cluster/master/tools/install-tools.sh
+   bash install-tools.sh $ToolsUser $ToolsPass
+if
+
 #
 # Services restart
 #

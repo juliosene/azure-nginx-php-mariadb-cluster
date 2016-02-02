@@ -45,8 +45,8 @@ mv nginx.conf /etc/nginx/
 # replace Nginx default.conf
 #
 wget https://raw.githubusercontent.com/juliosene/azure-nginx-php-mariadb-cluster/master/files/default.conf
+sed -i "s,/var/run/php5-fpm.sock,/var/run/php/php7.0-fpm.sock,g" default.conf
 
-#sed -i "s/#WORKER#/$WORKER/g" nginx.conf
 mv default.conf /etc/nginx/conf.d/
 
 # Memcache client installation

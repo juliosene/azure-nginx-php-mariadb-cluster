@@ -48,10 +48,9 @@
     },
     "ubuntuOSVersion": {
       "type": "string",
-      "defaultValue": "14.04.2-LTS",
+      "defaultValue": "14.04.3-LTS",
       "allowedValues": [
-        "12.04.5-LTS",
-        "14.04.2-LTS",
+        "14.04.3-LTS",
         "15.04"
       ],
       "metadata": {
@@ -149,7 +148,7 @@
     "OSDiskName": "osdiskforlinuxsimple",
     "DataDiskName": "datakisklinux",
     "nicName": "[concat(parameters('vmName'),'-Nic')]",
-    "nicNameDB": "[concat(parameters('vmName'),'-NicDB')]",
+    "nicNameDB": "[concat('DB-', parameters('vmName'),'-Nic')]",
     "subnetName": "Subnet",
     "subnetIPBase": "10.0.0.",
     "addressPrefix": "[concat(variables('subnetIPBase'),'0/24')]",
@@ -164,9 +163,9 @@
     "availabilitySetNameDB": "[concat('DB',variables('availabilitySetName'))]",
     "publicIPName": "[concat(parameters('vmName'),'-PubIP')]",
     "nsgName": "[concat(parameters('vmName'),'-NSG')]",
-    "nsgNameDB": "[concat('DB',variables('nsgName'))]",
+    "nsgNameDB": "[concat('DB-',variables('nsgName'))]",
     "lbName": "[concat(parameters('vmName'),'-LB')]",
-    "lbNameDB": "[concat(parameters('vmName'),'-LB-DB')]",
+    "lbNameDB": "[concat('DB-',parameters('vmName'),'-LB')]",
     "lbID": "[resourceId('Microsoft.Network/loadBalancers',variables('lbName'))]",
     "lbDBID": "[resourceId('Microsoft.Network/loadBalancers',variables('lbNameDB'))]",
     "virtualNetworkName": "[concat(parameters('vmName'),'-VNet')]",
@@ -175,7 +174,7 @@
     "subnetRefDB": "[concat(variables('vnetId'), '/subnets/DB-', variables('subnetName'))]",
     "vhdStorageName": "[concat(tolower(parameters('vmName')), uniqueString(resourceGroup().id))]",
     "vhdDBStorageName": "[concat('db',variables('vhdStorageName'))]",
-    "vmDBName": "[concat(parameters('vmName'),'-DB')]",
+    "vmDBName": "[concat('DB-',parameters('vmName'))]",
     "nginxRootDir": "html",
 
     "sshIPConfigName": "[concat(parameters('dnsNameForPublicIP'), '-sshIPCfg')]",

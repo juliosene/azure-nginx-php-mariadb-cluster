@@ -81,59 +81,70 @@
         "Standard_D12",
         "Standard_D13",
         "Standard_D14"
-      ],
+      ]
     },
-      "mySQLrootPassword": {
-        "type": "string",
-        "defaultValue": "",
-        "metadata": {
-          "description": "Password to MariaDB root access"
-        }
-      },
-      "nodeDBCount": {
-        "type": "int",
-        "defaultValue": 2,
-        "allowedValues": [
-          1,
-          2,
-          3,
-          4,
-          5
-        ],
-        "metadata": {
-          "description": "Number of Virtual Machines for MariaDB."
-        }
-      },
-      "vmDBSize": {
-        "type": "string",
-        "defaultValue": "Standard_A0",
-        "allowedValues": [
-          "Standard_A0",
-          "Standard_A1",
-          "Standard_A2",
-          "Standard_A3",
-          "Standard_A4",
-          "Standard_A5",
-          "Standard_A6",
-          "Standard_A7",
-          "Standard_A8",
-          "Standard_A9",
-          "Standard_A10",
-          "Standard_A11",
-          "Standard_D1",
-          "Standard_D2",
-          "Standard_D3",
-          "Standard_D4",
-          "Standard_D11",
-          "Standard_D12",
-          "Standard_D13",
-          "Standard_D14"
-        ],
-        "metadata": {
-          "description": "The size of each MariaDB front end VM."
-        }
+    "mySQLrootPassword": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "Password to MariaDB root access"
       }
     },
+    "nodeDBCount": {
+      "type": "int",
+      "defaultValue": 2,
+      "allowedValues": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "metadata": {
+        "description": "Number of Virtual Machines for MariaDB."
+      }
+    },
+    "vmDBSize": {
+      "type": "string",
+      "defaultValue": "Standard_A0",
+      "allowedValues": [
+        "Standard_A0",
+        "Standard_A1",
+        "Standard_A2",
+        "Standard_A3",
+        "Standard_A4",
+        "Standard_A5",
+        "Standard_A6",
+        "Standard_A7",
+        "Standard_A8",
+        "Standard_A9",
+        "Standard_A10",
+        "Standard_A11",
+        "Standard_D1",
+        "Standard_D2",
+        "Standard_D3",
+        "Standard_D4",
+        "Standard_D11",
+        "Standard_D12",
+        "Standard_D13",
+        "Standard_D14"
+      ],
+      "metadata": {
+        "description": "The size of each MariaDB front end VM."
+      }
+    },
+    "install_tools": {
+      "type": "string",
+      "defaultValue": "yes",
+      "allowedValues": [
+        "yes",
+        "no"
+      ],
+      "metadata": {
+        "description": "Install administration tools (File Manager and PHPMyAdmin)"
+      }
+    }
+  },
   "variables": {
     "resourceAPIVersion": "2015-06-15",
     "artifactsPath": "https://raw.githubusercontent.com/juliosene/azure-nginx-php-mariadb-cluster/master",
@@ -759,7 +770,7 @@
           ]
         },
         "protectedSettings": {
-          "commandToExecute": "[concat(variables('customScriptCommandToExecute'), ' 0 ',variables('vhdStorageName'), ' ', variables('nginxRootDir'), ' ',listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('vhdStorageName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).key1)]"
+          "commandToExecute": "[concat(variables('customScriptCommandToExecute'), ' 0 ',variables('vhdStorageName'), ' ', variables('nginxRootDir'), ' ',listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('vhdStorageName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).key1, ' ', parameters('install_tools'), ' ', parameters('adminUsername'), ' ', parameters('adminPassword') )]"
         }
       }
     },

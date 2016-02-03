@@ -91,22 +91,24 @@ fi
 mv default.conf /etc/nginx/conf.d/
 
 # Memcache client installation
+# php 7
 if [ "$PHPVersion" -eq 7 ]; then
 apt-get install -fy php-memcached
+wget https://raw.githubusercontent.com/juliosene/azure-nginx-php-mariadb-cluster/master/files/memcache.ini
+mv memcache.ini /etc/php/mods-available/
+ln -s /etc/php/mods-available/memcache.ini  /etc/php/7.0/fpm/conf.d/20-memcache.ini
+# php 5
 else
 apt-get install -fy php-pear
 apt-get install -fy php5-dev
 printf "\n" |pecl install -f memcache
-fi
-#
 wget https://raw.githubusercontent.com/juliosene/azure-nginx-php-mariadb-cluster/master/files/memcache.ini
-
 #sed -i "s/#WORKER#/$WORKER/g" memcache.ini
 mv memcache.ini /etc/php5/mods-available/
-
- ln -s /etc/php5/mods-available/memcache.ini  /etc/php5/fpm/conf.d/20-memcache.ini
- 
- # mount share file on /usr/share/nginx/html
+ln -s /etc/php5/mods-available/memcache.ini  /etc/php5/fpm/conf.d/20-memcache.ini
+fi
+#
+# mount share file on /usr/share/nginx/html
 
 # azure storage share list $SharedAzureFileName -a $SharedStorageAccountName -k $SharedStorageAccountKey |grep -q 'html' && echo 'yes'
 mount -t cifs //$SharedStorageAccountName.file.core.windows.net/$SharedAzureFileName /usr/share/nginx/html -o uid=$(id -u nginx),vers=2.1,username=$SharedStorageAccountName,password=$SharedStorageAccountKey,dir_mode=0770,file_mode=0770

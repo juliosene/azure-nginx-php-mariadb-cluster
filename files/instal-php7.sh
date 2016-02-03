@@ -21,7 +21,7 @@ apt-get install -y -f cifs-utils
 
 apt-get install -fy nginx
 apt-get install -fy python-software-properties
-LC_ALL=en_US.UTF-8 add-apt-repository ppa:ondrej/php
+LC_ALL=en_US.UTF-8 add-apt-repository ppa:ondrej/php -y
 apt-get -y update
 apt-get install php7.0 php7.0-fpm php7.0-mysql -y
 apt-get install -fy php-apc php7.0-gd

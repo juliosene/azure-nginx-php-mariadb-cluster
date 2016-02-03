@@ -91,13 +91,13 @@ fi
 mv default.conf /etc/nginx/conf.d/
 
 # Memcache client installation
-# php 7
+# ## php 7
 if [ "$PHPVersion" -eq 7 ]; then
 apt-get install -fy php-memcached
-wget https://raw.githubusercontent.com/juliosene/azure-nginx-php-mariadb-cluster/master/files/memcache.ini
-mv memcache.ini /etc/php/mods-available/
-ln -s /etc/php/mods-available/memcache.ini  /etc/php/7.0/fpm/conf.d/20-memcache.ini
-# php 5
+# wget https://raw.githubusercontent.com/juliosene/azure-nginx-php-mariadb-cluster/master/files/memcache.ini
+# mv memcache.ini /etc/php/mods-available/
+# ln -s /etc/php/mods-available/memcache.ini  /etc/php/7.0/fpm/conf.d/20-memcache.ini
+# ## php 5
 else
 apt-get install -fy php-pear
 apt-get install -fy php5-dev

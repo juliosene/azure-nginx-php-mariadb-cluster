@@ -143,8 +143,19 @@
       "metadata": {
         "description": "Install administration tools (File Manager and PHPMyAdmin)"
       }
-    }
-  },
+    },
+      "php_version": {
+        "type": "int",
+        "defaultValue": 5,
+        "allowedValues": [
+          5,
+          7
+        ],
+        "metadata": {
+          "description": "Install administration tools (File Manager and PHPMyAdmin)"
+        }
+      }
+    },
   "variables": {
     "resourceAPIVersion": "2015-06-15",
     "artifactsPath": "https://raw.githubusercontent.com/juliosene/azure-nginx-php-mariadb-cluster/master",
@@ -770,7 +781,7 @@
           ]
         },
         "protectedSettings": {
-          "commandToExecute": "[concat(variables('customScriptCommandToExecute'), ' 0 ',variables('vhdStorageName'), ' ', variables('nginxRootDir'), ' ',listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('vhdStorageName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).key1, ' ', parameters('install_tools'), ' ', parameters('adminUsername'), ' ', parameters('adminPassword') )]"
+          "commandToExecute": "[concat(variables('customScriptCommandToExecute'), ' 0 ',variables('vhdStorageName'), ' ', variables('nginxRootDir'), ' ',listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('vhdStorageName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).key1, ' ', parameters('php_version'), ' ', parameters('install_tools'), ' ', parameters('adminUsername'), ' ', parameters('adminPassword') )]"
         }
       }
     },
@@ -819,7 +830,7 @@
           ]
         },
         "protectedSettings": {
-          "commandToExecute": "[concat(variables('customScriptCommandToExecute'), ' 1 ',variables('vhdStorageName'), ' ', variables('nginxRootDir'), ' ',listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('vhdStorageName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).key1)]"
+          "commandToExecute": "[concat(variables('customScriptCommandToExecute'), ' 1 ',variables('vhdStorageName'), ' ', variables('nginxRootDir'), ' ',listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('vhdStorageName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).key1, ' ', parameters('php_version'))]"
         }
       }
     },

@@ -21,8 +21,8 @@ ToolsPass=$8
 
 wget http://nginx.org/keys/nginx_signing.key
 apt-key add nginx_signing.key
-add-apt-repository "deb http://nginx.org/packages/$DISTRO/ $REL nginx"
-add-apt-repository "deb-src http://nginx.org/packages/$DISTRO/ $REL nginx"
+add-apt-repository "deb http://nginx.org/packages/$DISTRO $REL nginx"
+add-apt-repository "deb-src http://nginx.org/packages/$DISTRO $REL nginx"
 if [ "$PHPVersion" -eq 7 ]; then
 apt-get install -fy python-software-properties
 LC_ALL=en_US.UTF-8 add-apt-repository ppa:ondrej/php -y
@@ -117,12 +117,17 @@ mount -t cifs //$SharedStorageAccountName.file.core.windows.net/$SharedAzureFile
 chmod 770 /etc/fstab
 echo "//$SharedStorageAccountName.file.core.windows.net/$SharedAzureFileName /usr/share/nginx/html cifs uid=$(id -u nginx),vers=3.0,username=$SharedStorageAccountName,password=$SharedStorageAccountKey,dir_mode=0770,file_mode=0770" >> /etc/fstab
 
+if [ $OPTION -lt 1 ]; 
+then  
 #
 # Edit default page to show php info
 #
 #mv /usr/share/nginx/html/index.html /usr/share/nginx/html/index.php
 mkdir /usr/share/nginx/html/web
 echo -e "<html><title>Azure Nginx PHP</title><body><h2>Your Nginx and PHP are running!</h1></br>\n<?php\nphpinfo();\n?></body>" > /usr/share/nginx/html/web/index.php
+#
+fi
+
 #
 # Services restart
 #
@@ -131,4 +136,5 @@ service php7.0-fpm restart
 else
 service php5-fpm restart
 if
+
 service nginx restart

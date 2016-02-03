@@ -22,7 +22,7 @@ ToolsPass=$8
 wget http://nginx.org/keys/nginx_signing.key
 apt-key add nginx_signing.key
 add-apt-repository "deb http://nginx.org/packages/$DISTRO $REL nginx"
-add-apt-repository "deb-src http://nginx.org/packages/$DISTRO $REL nginx"
+# add-apt-repository "deb-src http://nginx.org/packages/$DISTRO $REL nginx"
 if [ "$PHPVersion" -eq 7 ]; then
 apt-get install -fy python-software-properties
 LC_ALL=en_US.UTF-8 add-apt-repository ppa:ondrej/php -y

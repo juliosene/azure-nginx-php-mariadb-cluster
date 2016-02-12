@@ -135,6 +135,6 @@ if [ "$PHPVersion" -eq 7 ]; then
 service php7.0-fpm restart
 else
 service php5-fpm restart
-if
+fi
 
 service nginx restart

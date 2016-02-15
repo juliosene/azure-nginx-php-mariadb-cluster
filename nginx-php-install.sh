@@ -38,13 +38,6 @@ then
 # Create Azure file share that will be used by front end VM's for moodledata directory
 wget https://raw.githubusercontent.com/juliosene/azure-nginx-php-mariadb-cluster/master/create-file-share.sh
 bash create-file-share.sh $SharedStorageAccountName $SharedAzureFileName $SharedStorageAccountKey > /root/create-file-share.log
-#
-# Install admin tools
-if [ $InstallTools == "yes" ];
-then
-   wget https://raw.githubusercontent.com/juliosene/azure-nginx-php-mariadb-cluster/master/tools/install-tools.sh
-   bash install-tools.sh $ToolsUser $ToolsPass
-fi
 
 fi
 
@@ -126,6 +119,14 @@ then
 mkdir /usr/share/nginx/html/web
 echo -e "<html><title>Azure Nginx PHP</title><body><h2>Your Nginx and PHP are running!</h1></br>\n<?php\nphpinfo();\n?></body>" > /usr/share/nginx/html/web/index.php
 #
+#
+# Install admin tools
+if [ $InstallTools == "yes" ];
+then
+   wget https://raw.githubusercontent.com/juliosene/azure-nginx-php-mariadb-cluster/master/tools/install-tools.sh
+   bash install-tools.sh $ToolsUser $ToolsPass
+fi
+
 fi
 
 #

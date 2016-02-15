@@ -2,7 +2,7 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "vmName": {
+    "VM_Name": {
       "type": "string",
       "metadata": {
         "description": "(Short) Name for the Virtual Machine."
@@ -162,18 +162,18 @@
         "description": "Install administration tools (File Manager and PHPMyAdmin)"
       }
     },
-      "php_version": {
-        "type": "int",
-        "defaultValue": 5,
-        "allowedValues": [
-          5,
-          7
-        ],
-        "metadata": {
-          "description": "Install administration tools (File Manager and PHPMyAdmin)"
-        }
+    "php_version": {
+      "type": "int",
+      "defaultValue": 5,
+      "allowedValues": [
+        5,
+        7
+      ],
+      "metadata": {
+        "description": "Install administration tools (File Manager and PHPMyAdmin)"
       }
-    },
+    }
+  },
   "variables": {
     "resourceAPIVersion": "2015-06-15",
     "artifactsPath": "https://raw.githubusercontent.com/juliosene/azure-nginx-php-mariadb-cluster/master",
@@ -187,8 +187,8 @@
     "imageOffer": "UbuntuServer",
     "OSDiskName": "osdiskforlinuxsimple",
     "DataDiskName": "datakisklinux",
-    "nicName": "[concat(parameters('vmName'),'-Nic')]",
-    "nicNameDB": "[concat('DB-', parameters('vmName'),'-Nic')]",
+    "nicName": "[concat('App-', parameters('VM_Name'),'-Nic')]",
+    "nicNameDB": "[concat('DB-', parameters('VM_Name'),'-Nic')]",
     "subnetName": "Subnet",
     "subnetIPBase": "10.0.0.",
     "addressPrefix": "[concat(variables('subnetIPBase'),'0/24')]",
@@ -199,22 +199,23 @@
     "vhdStorageType": "Standard_LRS",
     "publicIPAddressType": "Dynamic",
     "vhdStorageContainerName": "osvhds",
-    "availabilitySetName": "[concat(parameters('vmName'), '-AvSet')]",
-    "availabilitySetNameDB": "[concat('DB',variables('availabilitySetName'))]",
-    "publicIPName": "[concat(parameters('vmName'),'-PubIP')]",
-    "nsgName": "[concat(parameters('vmName'),'-NSG')]",
-    "nsgNameDB": "[concat('DB-',variables('nsgName'))]",
-    "lbName": "[concat(parameters('vmName'),'-LB')]",
-    "lbNameDB": "[concat('DB-',parameters('vmName'),'-LB')]",
+    "availabilitySetName": "[concat('App-', parameters('VM_Name'), '-AvSet')]",
+    "availabilitySetNameDB": "[concat('DB-', parameters('VM_Name'), '-AvSet')]",
+    "publicIPName": "[concat(parameters('VM_Name'),'-PubIP')]",
+    "nsgName": "[concat('App-', parameters('VM_Name'),'-NSG')]",
+    "nsgNameDB": "[concat('DB-', parameters('VM_Name'),'-NSG')]",
+    "lbName": "[concat('App-', parameters('VM_Name'),'-LB')]",
+    "lbNameDB": "[concat('DB-',parameters('VM_Name'),'-LB')]",
     "lbID": "[resourceId('Microsoft.Network/loadBalancers',variables('lbName'))]",
     "lbDBID": "[resourceId('Microsoft.Network/loadBalancers',variables('lbNameDB'))]",
-    "virtualNetworkName": "[concat(parameters('vmName'),'-VNet')]",
+    "virtualNetworkName": "[concat(parameters('VM_Name'),'-VNet')]",
     "vnetId": "[resourceId('Microsoft.Network/virtualNetworks', variables('virtualNetworkName'))]",
-    "subnetRefWeb": "[concat(variables('vnetId'), '/subnets/Web-', variables('subnetName'))]",
+    "subnetRefApp": "[concat(variables('vnetId'), '/subnets/App-', variables('subnetName'))]",
     "subnetRefDB": "[concat(variables('vnetId'), '/subnets/DB-', variables('subnetName'))]",
-    "vhdStorageName": "[concat(tolower(parameters('vmName')), uniqueString(resourceGroup().id))]",
+    "vhdStorageName": "[concat(tolower(parameters('VM_Name')), uniqueString(resourceGroup().id))]",
     "vhdDBStorageName": "[concat('db',variables('vhdStorageName'))]",
-    "vmDBName": "[concat('DB-',parameters('vmName'))]",
+    "vmDBName": "[concat('DB-',parameters('VM_Name'))]",
+    "vmName": "[concat('App-',parameters('VM_Name'))]",
     "nginxRootDir": "html",
 
     "sshIPConfigName": "[concat(parameters('dnsNameForPublicIP'), '-sshIPCfg')]",
@@ -239,7 +240,7 @@
       "apiVersion": "[variables('resourceAPIVersion')]",
       "location": "[resourceGroup().location]",
       "tags": {
-        "displayName": "StorageAccount"
+        "displayName": "StorageAccountDB"
       },
       "properties": {
         "accountType": "[variables('vhdStorageType')]"
@@ -310,7 +311,7 @@
             "name": "Tools",
             "properties": {
               "provisioningState": "Succeeded",
-              "description": "Allow Web Access",
+              "description": "Allow Web Access for Tools",
               "protocol": "Tcp",
               "sourcePortRange": "*",
               "destinationPortRange": "8888",
@@ -339,7 +340,7 @@
             "name": "MySQL",
             "properties": {
               "provisioningState": "Succeeded",
-              "description": "Allow Web Access",
+              "description": "Allow MySQL Access",
               "protocol": "Tcp",
               "sourcePortRange": "*",
               "destinationPortRange": "3306",
@@ -354,7 +355,7 @@
             "name": "GaleraClusterRep",
             "properties": {
               "provisioningState": "Succeeded",
-              "description": "Allow Web Access",
+              "description": "Allow Gallera Replication Access",
               "protocol": "*",
               "sourcePortRange": "*",
               "destinationPortRange": "4567",
@@ -369,7 +370,7 @@
             "name": "StateSnapshotTransfer",
             "properties": {
               "provisioningState": "Succeeded",
-              "description": "Allow Web Access",
+              "description": "Allow Snapshot Transfer Access",
               "protocol": "Tcp",
               "sourcePortRange": "*",
               "destinationPortRange": "4444",
@@ -413,7 +414,7 @@
             }
           },
           {
-            "name": "[concat('Web-',variables('subnetName'))]",
+            "name": "[concat('App-',variables('subnetName'))]",
             "properties": {
               "addressPrefix": "[variables('subnetPrefix1')]",
               "networkSecurityGroup": {
@@ -472,7 +473,7 @@
                 "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('lbName')), '/backendAddressPools/BackendPool')]"
               },
               "probe": {
-                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('lbName')), '/probes/lbWebProbe')]"
+                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('lbName')), '/probes/lbAppProbe')]"
               },
               "protocol": "Tcp",
               "frontendPort": 80,
@@ -507,7 +508,7 @@
               "intervalInSeconds": 15,
               "numberOfProbes": 2
             },
-            "name": "lbWebProbe"
+            "name": "lbAppProbe"
           },
           {
             "properties": {
@@ -534,7 +535,7 @@
           {
             "properties": {
               "subnet": {
-                "id": "[variables('subnetRefWeb')]"
+                "id": "[variables('subnetRefApp')]"
               },
               "privateIPAddress": "[concat(variables('subnetIPBase'),'70' )]",
               "privateIPAllocationMethod": "Static"
@@ -604,7 +605,7 @@
             "properties": {
               "privateIPAllocationMethod": "Dynamic",
               "subnet": {
-                "id": "[variables('subnetRefWeb')]"
+                "id": "[variables('subnetRefApp')]"
               },
               "loadBalancerBackendAddressPools": [
                 {
@@ -654,7 +655,7 @@
       }
     },
     {
-      "name": "[concat(parameters('vmName'), copyIndex())]",
+      "name": "[concat(variables('vmName'), copyIndex())]",
       "type": "Microsoft.Compute/virtualMachines",
       "apiVersion": "[variables('resourceAPIVersion')]",
       "location": "[resourceGroup().location]",
@@ -678,7 +679,7 @@
           "vmSize": "[parameters('vmSize')]"
         },
         "osProfile": {
-          "computerName": "[concat(parameters('vmName'), copyIndex())]",
+          "computerName": "[concat(variables('vmName'), copyIndex())]",
           "adminUsername": "[parameters('adminUsername')]",
           "adminPassword": "[parameters('adminPassword')]"
         },
@@ -783,11 +784,11 @@
     },
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat(parameters('vmName'), sub(parameters('nodeCount'),1), '/setupNginxPHP')]",
+      "name": "[concat(variables('vmName'), sub(parameters('nodeCount'),1), '/setupNginxPHP')]",
       "apiVersion": "[variables('resourceAPIVersion')]",
       "location": "[resourceGroup().location]",
       "dependsOn": [
-        "[concat('Microsoft.Compute/virtualMachines/', parameters('vmName'),sub(parameters('nodeCount'),1))]"
+        "[concat('Microsoft.Compute/virtualMachines/', variables('vmName'),sub(parameters('nodeCount'),1))]"
       ],
       "properties": {
         "publisher": "Microsoft.OSTCExtensions",
@@ -827,7 +828,7 @@
     },
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat(parameters('vmName'), copyIndex(), '/setupNginxPHP')]",
+      "name": "[concat(variables('vmName'), copyIndex(), '/setupNginxPHP')]",
       "apiVersion": "[variables('resourceAPIVersion')]",
       "location": "[resourceGroup().location]",
       "copy": {
@@ -835,8 +836,8 @@
         "count": "[sub(parameters('nodeCount'),1)]"
       },
       "dependsOn": [
-        "[concat('Microsoft.Compute/virtualMachines/', parameters('vmName'),copyIndex())]",
-        "[concat('Microsoft.Compute/virtualMachines/', parameters('vmName'),sub(parameters('nodeCount'),1),'/extensions/setupNginxPHP')]"
+        "[concat('Microsoft.Compute/virtualMachines/', variables('vmName'),copyIndex())]",
+        "[concat('Microsoft.Compute/virtualMachines/', variables('vmName'),sub(parameters('nodeCount'),1),'/extensions/setupNginxPHP')]"
       ],
       "properties": {
         "publisher": "Microsoft.OSTCExtensions",

@@ -129,12 +129,23 @@ fi
 
 fi
 
+if [ $InstallTools == "yes" ];
+then
+if [ $OPTION -gt 0 ]; 
+then  
+wget https://raw.githubusercontent.com/juliosene/azure-nginx-php-mariadb-cluster/master/tools/tools.conf
+mv tools.conf /etc/nginx/conf.d/
+fi
+fi
+
 #
 # Services restart
 #
 if [ "$PHPVersion" -eq 7 ]; then
+sed -i "s/upload_max_filesize = 5M/upload_max_filesize = 100M/g" /etc/php/7.0/fpm/php.ini
 service php7.0-fpm restart
 else
+sed -i "s/upload_max_filesize = 5M/upload_max_filesize = 100M/g" /etc/php5/fpm/php.ini
 service php5-fpm restart
 fi
 

@@ -117,7 +117,7 @@ then
 #
 #mv /usr/share/nginx/html/index.html /usr/share/nginx/html/index.php
 mkdir /usr/share/nginx/html/web
-echo -e "<html><title>Azure Nginx PHP</title><body><h2>Your Nginx and PHP are running!</h1></br>\n<?php\nphpinfo();\n?></body>" > /usr/share/nginx/html/web/index.php
+echo -e "<html><title>Azure Nginx PHP</title><body><h2 align='center'>Your Nginx and PHP are running!</h2><h2 align='center'>Host: <?= gethostname() ?></h2></br>\n<?php\nphpinfo();\n?></body>" > /usr/share/nginx/html/web/index.php
 #
 #
 # Install admin tools

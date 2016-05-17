@@ -175,7 +175,8 @@
     }
   },
   "variables": {
-    "resourceAPIVersion": "2015-06-15",
+    "computeApiVersion": "2016-03-30",
+    "storageApiVersion": "2015-06-15",
     "artifactsPath": "https://raw.githubusercontent.com/juliosene/azure-nginx-php-mariadb-cluster/master",
 
     "customScriptCommandToExecute": "bash nginx-php-install.sh",
@@ -225,7 +226,7 @@
     {
       "type": "Microsoft.Storage/storageAccounts",
       "name": "[concat(variables('vhdStorageName'))]",
-      "apiVersion": "[variables('resourceAPIVersion')]",
+      "apiVersion": "[variables('storageApiVersion')]",
       "location": "[resourceGroup().location]",
       "tags": {
         "displayName": "StorageAccount"
@@ -237,7 +238,7 @@
     {
       "type": "Microsoft.Storage/storageAccounts",
       "name": "[variables('vhdDBStorageName')]",
-      "apiVersion": "[variables('resourceAPIVersion')]",
+      "apiVersion": "[variables('storageApiVersion')]",
       "location": "[resourceGroup().location]",
       "tags": {
         "displayName": "StorageAccountDB"
@@ -249,7 +250,7 @@
     {
       "type": "Microsoft.Compute/availabilitySets",
       "name": "[variables('availabilitySetName')]",
-      "apiVersion": "[variables('resourceAPIVersion')]",
+      "apiVersion": "[variables('computeApiVersion')]",
       "location": "[resourceGroup().location]",
       "properties": {
         "platformFaultDomainCount": "3",
@@ -259,7 +260,7 @@
     {
       "type": "Microsoft.Compute/availabilitySets",
       "name": "[variables('availabilitySetNameDB')]",
-      "apiVersion": "[variables('resourceAPIVersion')]",
+      "apiVersion": "[variables('computeApiVersion')]",
       "location": "[resourceGroup().location]",
       "properties": {
         "platformFaultDomainCount": "3",
@@ -267,7 +268,7 @@
       }
     },
     {
-      "apiVersion": "[variables('resourceAPIVersion')]",
+      "apiVersion": "[variables('computeApiVersion')]",
       "type": "Microsoft.Network/publicIPAddresses",
       "name": "[variables('publicIPName')]",
       "location": "[resourceGroup().location]",
@@ -284,7 +285,7 @@
     {
       "name": "[variables('nsgName')]",
       "type": "Microsoft.Network/networkSecurityGroups",
-      "apiVersion": "[variables('resourceAPIVersion')]",
+      "apiVersion": "[variables('computeApiVersion')]",
       "location": "[resourceGroup().location]",
       "tags": {
         "displayName": "Network Security Group"
@@ -328,7 +329,7 @@
     {
       "name": "[variables('nsgNameDB')]",
       "type": "Microsoft.Network/networkSecurityGroups",
-      "apiVersion": "[variables('resourceAPIVersion')]",
+      "apiVersion": "[variables('computeApiVersion')]",
       "location": "[resourceGroup().location]",
       "tags": {
         "displayName": "Network Security Group"
@@ -385,7 +386,7 @@
       }
     },
     {
-      "apiVersion": "[variables('resourceAPIVersion')]",
+      "apiVersion": "[variables('computeApiVersion')]",
       "type": "Microsoft.Network/virtualNetworks",
       "name": "[variables('virtualNetworkName')]",
       "location": "[resourceGroup().location]",
@@ -439,7 +440,7 @@
       }
     },
     {
-      "apiVersion": "[variables('resourceAPIVersion')]",
+      "apiVersion": "[variables('computeApiVersion')]",
       "type": "Microsoft.Network/loadBalancers",
       "name": "[variables('lbName')]",
       "location": "[resourceGroup().location]",
@@ -523,7 +524,7 @@
       }
     },
     {
-      "apiVersion": "[variables('resourceAPIVersion')]",
+      "apiVersion": "[variables('computeApiVersion')]",
       "type": "Microsoft.Network/loadBalancers",
       "name": "[concat(variables('lbNameDB'))]",
       "location": "[resourceGroup().location]",
@@ -582,7 +583,7 @@
       }
     },
     {
-      "apiVersion": "[variables('resourceAPIVersion')]",
+      "apiVersion": "[variables('computeApiVersion')]",
       "type": "Microsoft.Network/networkInterfaces",
       "name": "[concat(variables('nicName'), copyindex())]",
       "location": "[resourceGroup().location]",
@@ -618,7 +619,7 @@
       }
     },
     {
-      "apiVersion": "[variables('resourceAPIVersion')]",
+      "apiVersion": "[variables('computeApiVersion')]",
       "type": "Microsoft.Network/networkInterfaces",
       "name": "[concat(variables('nicNameDB'), copyindex())]",
       "location": "[resourceGroup().location]",
@@ -657,7 +658,7 @@
     {
       "name": "[concat(variables('vmName'), copyIndex())]",
       "type": "Microsoft.Compute/virtualMachines",
-      "apiVersion": "[variables('resourceAPIVersion')]",
+      "apiVersion": "[variables('computeApiVersion')]",
       "location": "[resourceGroup().location]",
       "copy": {
         "name": "virtualMachineLoop",
@@ -711,7 +712,7 @@
     {
       "name": "[concat(variables('vmDBName'), copyIndex())]",
       "type": "Microsoft.Compute/virtualMachines",
-      "apiVersion": "[variables('resourceAPIVersion')]",
+      "apiVersion": "[variables('computeApiVersion')]",
       "location": "[resourceGroup().location]",
       "copy": {
         "name": "virtualMachineLoop",
@@ -785,7 +786,7 @@
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
       "name": "[concat(variables('vmName'), sub(parameters('nodeCount'),1), '/setupNginxPHP')]",
-      "apiVersion": "[variables('resourceAPIVersion')]",
+      "apiVersion": "[variables('computeApiVersion')]",
       "location": "[resourceGroup().location]",
       "dependsOn": [
         "[concat('Microsoft.Compute/virtualMachines/', variables('vmName'),sub(parameters('nodeCount'),1))]"
@@ -807,7 +808,7 @@
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
       "name": "[concat(variables('vmDBName'), sub(parameters('nodeDBCount'),1), '/setupGaleraCluster')]",
-      "apiVersion": "[variables('resourceAPIVersion')]",
+      "apiVersion": "[variables('computeApiVersion')]",
       "location": "[resourceGroup().location]",
       "dependsOn": [
         "[concat('Microsoft.Compute/virtualMachines/', variables('vmDBName'),sub(parameters('nodeDBCount'),1))]"
@@ -829,7 +830,7 @@
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
       "name": "[concat(variables('vmName'), copyIndex(), '/setupNginxPHP')]",
-      "apiVersion": "[variables('resourceAPIVersion')]",
+      "apiVersion": "[variables('computeApiVersion')]",
       "location": "[resourceGroup().location]",
       "copy": {
         "name": "virtualMachineExtLoop",
@@ -856,7 +857,7 @@
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
       "name": "[concat(variables('vmDBName'), copyIndex(), '/setupGaleraCluster')]",
-      "apiVersion": "[variables('resourceAPIVersion')]",
+      "apiVersion": "[variables('computeApiVersion')]",
       "location": "[resourceGroup().location]",
       "copy": {
         "name": "virtualMachineExtLoop",

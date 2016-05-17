@@ -800,7 +800,7 @@
           ]
         },
         "protectedSettings": {
-          "commandToExecute": "[concat(variables('customScriptCommandToExecute'), ' 0 ',variables('vhdStorageName'), ' ', variables('nginxRootDir'), ' ',listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('vhdStorageName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys, ' ', parameters('php_version'), ' ', parameters('install_tools'), ' ', parameters('adminUsername'), ' ', parameters('adminPassword') )]"
+          "commandToExecute": "[concat(variables('customScriptCommandToExecute'), ' 0 ',variables('vhdStorageName'), ' ', variables('nginxRootDir'), ' ',listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('vhdStorageName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value, ' ', parameters('php_version'), ' ', parameters('install_tools'), ' ', parameters('adminUsername'), ' ', parameters('adminPassword') )]"
         }
       }
     },
@@ -849,7 +849,7 @@
           ]
         },
         "protectedSettings": {
-          "commandToExecute": "[concat(variables('customScriptCommandToExecute'), ' 1 ',variables('vhdStorageName'), ' ', variables('nginxRootDir'), ' ',listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('vhdStorageName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys, ' ', parameters('php_version'))]"
+          "commandToExecute": "[concat(variables('customScriptCommandToExecute'), ' 1 ',variables('vhdStorageName'), ' ', variables('nginxRootDir'), ' ',listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('vhdStorageName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value, ' ', parameters('php_version'))]"
         }
       }
     },

@@ -625,7 +625,7 @@
       "location": "[resourceGroup().location]",
       "copy": {
         "name": "nicLoop",
-        "count": "[parameters('nodeCount')]"
+        "count": "[parameters('nodeDBCount')]"
       },
       "tags": {
         "displayName": "NetworkInterface"

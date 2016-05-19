@@ -8,14 +8,14 @@ MYSQLPASSWORD=${2:-""}
 IPPREFIX=${3:-"10.0.0."}
 DEBPASSWORD=${4:-`date +%D%A%B | md5sum| sha256sum | base64| fold -w16| head -n1`}
 IPLIST=`echo ""`
-MYIP=`ip route get $IPPREFIX.70 | awk 'NR==1 {print $NF}'`
+MYIP=`ip route get ${IPPREFIX}70 | awk 'NR==1 {print $NF}'`
 MYNAME=`echo "Node$MYIP" | sed 's/$IPPREFIX.1/-/'`
 CNAME=${4:-"GaleraCluster"}
-FIRSTNODE=`echo "$IPPREFIX$(( $NNODES + 9 ))"`
+FIRSTNODE=`echo "${IPPREFIX}$(( $NNODES + 9 ))"`
 
 for (( n=1; n<=$NNODES; n++ ))
 do
-   IPLIST+=`echo "10.0.0.$(( $n + 9 ))"`
+   IPLIST+=`echo "${IPPREFIX}$(( $n + 9 ))"`
    if [ "$n" -lt $NNODES ];
    then
         IPLIST+=`echo ","`

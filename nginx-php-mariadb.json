@@ -448,7 +448,7 @@
             }
           },
           {
-            "name": "[concat('Serv-',variables('subnetName'))]",
+            "name": "GatewaySubnet",
             "properties": {
               "addressPrefix": "[variables('subnetPrefix3')]"
             }

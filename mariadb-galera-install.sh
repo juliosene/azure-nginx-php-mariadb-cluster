@@ -5,12 +5,13 @@
 #
 NNODES=${1-1}
 MYSQLPASSWORD=${2:-""}
-DEBPASSWORD=${3:-`date +%D%A%B | md5sum| sha256sum | base64| fold -w16| head -n1`}
+IPPREFIX=${3:-"10.0.0."}
+DEBPASSWORD=${4:-`date +%D%A%B | md5sum| sha256sum | base64| fold -w16| head -n1`}
 IPLIST=`echo ""`
-MYIP=`ip route get 10.0.0.70 | awk 'NR==1 {print $NF}'`
-MYNAME=`echo "Node$MYIP" | sed 's/10.0.0.1/-/'`
+MYIP=`ip route get $IPPREFIX.70 | awk 'NR==1 {print $NF}'`
+MYNAME=`echo "Node$MYIP" | sed 's/$IPPREFIX.1/-/'`
 CNAME=${4:-"GaleraCluster"}
-FIRSTNODE=`echo "10.0.0.$(( $NNODES + 9 ))"`
+FIRSTNODE=`echo "$IPPREFIX$(( $NNODES + 9 ))"`
 
 for (( n=1; n<=$NNODES; n++ ))
 do

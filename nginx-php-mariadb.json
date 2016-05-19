@@ -175,6 +175,8 @@
     }
   },
   "variables": {
+    "subnetIPBase": "10.0.0.",
+    
     "computeApiVersion": "2016-03-30",
     "storageApiVersion": "2015-06-15",
     "artifactsPath": "https://raw.githubusercontent.com/juliosene/azure-nginx-php-mariadb-cluster/master",
@@ -191,7 +193,7 @@
     "nicName": "[concat('App-', parameters('VM_Name'),'-Nic')]",
     "nicNameDB": "[concat('DB-', parameters('VM_Name'),'-Nic')]",
     "subnetName": "Subnet",
-    "subnetIPBase": "10.0.0.",
+
     "addressPrefix": "[concat(variables('subnetIPBase'),'0/24')]",
     "subnetPrefix": "[concat(variables('subnetIPBase'),'0/26')]",
     "subnetPrefix1": "[concat(variables('subnetIPBase'),'64/26')]",
@@ -838,7 +840,7 @@
           ]
         },
         "protectedSettings": {
-          "commandToExecute": "[concat(variables('customScriptCommandToExecuteDB'),' ', parameters('nodeDBCount'), ' ', parameters('mySQLrootPassword'))]"
+          "commandToExecute": "[concat(variables('customScriptCommandToExecuteDB'),' ', parameters('nodeDBCount'), ' ', parameters('mySQLrootPassword'),' ',variables('subnetIPBase'))]"
         }
       }
     },
@@ -892,7 +894,7 @@
           ]
         },
         "protectedSettings": {
-          "commandToExecute": "[concat(variables('customScriptCommandToExecuteDB'),' ', parameters('nodeDBCount'), ' ', parameters('mySQLrootPassword'))]"
+          "commandToExecute": "[concat(variables('customScriptCommandToExecuteDB'),' ', parameters('nodeDBCount'), ' ', parameters('mySQLrootPassword'),' ',variables('subnetIPBase'))]"
         }
       }
     }

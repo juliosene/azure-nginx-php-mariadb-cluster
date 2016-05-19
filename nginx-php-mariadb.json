@@ -353,7 +353,7 @@
             }
           },
           {
-            "name": "GaleraClusterRep",
+            "name": "GaleraCluster",
             "properties": {
               "provisioningState": "Succeeded",
               "description": "Allow Gallera Replication Access",
@@ -364,6 +364,21 @@
               "destinationAddressPrefix": "*",
               "access": "Allow",
               "priority": 101,
+              "direction": "Inbound"
+            }
+          },
+         {
+            "name": "GaleraClusterRep",
+            "properties": {
+              "provisioningState": "Succeeded",
+              "description": "Allow Gallera Replication Access",
+              "protocol": "*",
+              "sourcePortRange": "*",
+              "destinationPortRange": "4568",
+              "sourceAddressPrefix": "VirtualNetwork",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 102,
               "direction": "Inbound"
             }
           },
@@ -378,7 +393,7 @@
               "sourceAddressPrefix": "VirtualNetwork",
               "destinationAddressPrefix": "*",
               "access": "Allow",
-              "priority": 102,
+              "priority": 103,
               "direction": "Inbound"
             }
           }

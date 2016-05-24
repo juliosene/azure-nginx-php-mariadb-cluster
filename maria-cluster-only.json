@@ -344,224 +344,223 @@
         ]
       }
     },
-      {
-        "apiVersion": "[variables('computeApiVersion')]",
-        "type": "Microsoft.Network/loadBalancers",
-        "name": "[concat(variables('lbNameDB'))]",
-        "location": "[resourceGroup().location]",
-        "dependsOn": [
-          "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]"
-        ],
-        "properties": {
-          "frontendIPConfigurations": [
-            {
-              "properties": {
-                "subnet": {
-                  "id": "[variables('subnetRefApp')]"
-                },
-                "privateIPAddress": "[concat(variables('subnetIPBase'),'70' )]",
-                "privateIPAllocationMethod": "Static"
-              },
-              "name": "LoadBalancerFrontendInternal"
-            }
-          ],
-          "backendAddressPools": [
-            {
-              "name": "BackendPool"
-            }
-          ],
-          "loadBalancingRules": [
-            {
-              "name": "MySQLRule",
-              "properties": {
-                "frontendIPConfiguration": {
-                  "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('lbNameDB')), '/frontendIpConfigurations/LoadBalancerFrontendInternal')]"
-                },
-                "backendAddressPool": {
-                  "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('lbNameDB')), '/backendAddressPools/BackendPool')]"
-                },
-                "probe": {
-                  "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('lbNameDB')), '/probes/MySQLProbe')]"
-                },
-                "protocol": "Tcp",
-                "frontendPort": 3306,
-                "backendPort": 3306,
-                "idleTimeoutInMinutes": 15
+    {
+      "apiVersion": "[variables('computeApiVersion')]",
+      "type": "Microsoft.Network/loadBalancers",
+      "name": "[concat(variables('lbNameDB'))]",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]",
+        "[concat('Microsoft.Network/publicIPAddresses/', variables('publicIPName'))]"
+      ],
+      "properties": {
+        "frontendIPConfigurations": [
+          {
+            "properties": {
+              "publicIPAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses/', variables('publicIPName'))]"
               }
-            }
-          ],
-          "probes": [
-            {
-              "properties": {
-                "protocol": "Tcp",
-                "port": 3306,
-                "intervalInSeconds": 15,
-                "numberOfProbes": 2
-              },
-              "name": "MySQLProbe"
-            }
-          ]
-        }
-      },
-      {
-        "apiVersion": "[variables('computeApiVersion')]",
-        "type": "Microsoft.Network/networkInterfaces",
-        "name": "[concat(variables('nicNameDB'), copyindex())]",
-        "location": "[resourceGroup().location]",
-        "copy": {
-          "name": "nicLoop",
-          "count": "[parameters('nodeDBCount')]"
-        },
-        "tags": {
-          "displayName": "NetworkInterface"
-        },
-        "dependsOn": [
-          "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]",
-          "[concat('Microsoft.Network/networkSecurityGroups/', variables('nsgNameDB'))]",
-          "[concat('Microsoft.Network/loadBalancers/', variables('lbNameDB'))]"
-        ],
-        "properties": {
-          "ipConfigurations": [
-            {
-              "name": "ipconfig1",
-              "properties": {
-                "privateIPAllocationMethod": "Static",
-                "privateIPAddress": "[concat(variables('subnetIPBase'), add(copyindex(),10))]",
-                "subnet": {
-                  "id": "[variables('subnetRefDB')]"
-                },
-                "loadBalancerBackendAddressPools": [
-                  {
-                    "id": "[concat(variables('lbDBID'), '/backendAddressPools/BackendPool')]"
-                  }
-                ]
-              }
-            }
-          ]
-        }
-      },
-      {
-        "name": "[concat(variables('vmDBName'), copyIndex())]",
-        "type": "Microsoft.Compute/virtualMachines",
-        "apiVersion": "[variables('computeApiVersion')]",
-        "location": "[resourceGroup().location]",
-        "copy": {
-          "name": "virtualMachineLoop",
-          "count": "[parameters('nodeDBCount')]"
-        },
-        "tags": {
-          "displayName": "VirtualMachine"
-        },
-        "dependsOn": [
-          "[concat('Microsoft.Compute/availabilitySets/', variables('availabilitySetNameDB'))]",
-          "[concat('Microsoft.Storage/storageAccounts/', variables('vhdDBStorageName'))]",
-          "[concat('Microsoft.Network/networkInterfaces/', variables('nicNameDB'), copyindex())]"
-        ],
-        "properties": {
-          "availabilitySet": {
-            "id": "[resourceId('Microsoft.Compute/availabilitySets', variables('availabilitySetNameDB'))]"
-          },
-          "hardwareProfile": {
-            "vmSize": "[parameters('vmDBSize')]"
-          },
-          "osProfile": {
-            "computerName": "[variables('vmDBName')]",
-            "adminUsername": "[parameters('adminUsername')]",
-            "adminPassword": "[parameters('adminPassword')]"
-          },
-          "storageProfile": {
-            "imageReference": {
-              "publisher": "[variables('imagePublisher')]",
-              "offer": "[variables('imageOffer')]",
-              "sku": "[parameters('ubuntuOSVersion')]",
-              "version": "latest"
             },
-            "osDisk": {
-              "name": "osdisk",
+            "name": "LoadBalancerFrontend"
+          }
+        ],
+        "backendAddressPools": [
+          {
+            "name": "BackendPool"
+          }
+        ],
+        "loadBalancingRules": [
+          {
+            "name": "MySQLRule",
+            "properties": {
+              "frontendIPConfiguration": {
+                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('lbNameDB')), '/frontendIpConfigurations/LoadBalancerFrontend')]"
+              },
+              "backendAddressPool": {
+                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('lbNameDB')), '/backendAddressPools/BackendPool')]"
+              },
+              "probe": {
+                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('lbNameDB')), '/probes/MySQLProbe')]"
+              },
+              "protocol": "Tcp",
+              "frontendPort": 3306,
+              "backendPort": 3306,
+              "idleTimeoutInMinutes": 15
+            }
+          }
+        ],
+        "probes": [
+          {
+            "properties": {
+              "protocol": "Tcp",
+              "port": 3306,
+              "intervalInSeconds": 15,
+              "numberOfProbes": 2
+            },
+            "name": "MySQLProbe"
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "[variables('computeApiVersion')]",
+      "type": "Microsoft.Network/networkInterfaces",
+      "name": "[concat(variables('nicNameDB'), copyindex())]",
+      "location": "[resourceGroup().location]",
+      "copy": {
+        "name": "nicLoop",
+        "count": "[parameters('nodeDBCount')]"
+      },
+      "tags": {
+        "displayName": "NetworkInterface"
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]",
+        "[concat('Microsoft.Network/networkSecurityGroups/', variables('nsgNameDB'))]",
+        "[concat('Microsoft.Network/loadBalancers/', variables('lbNameDB'))]"
+      ],
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "privateIPAllocationMethod": "Static",
+              "privateIPAddress": "[concat(variables('subnetIPBase'), add(copyindex(),10))]",
+              "subnet": {
+                "id": "[variables('subnetRefDB')]"
+              },
+              "loadBalancerBackendAddressPools": [
+                {
+                  "id": "[concat(variables('lbDBID'), '/backendAddressPools/BackendPool')]"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "[concat(variables('vmDBName'), copyIndex())]",
+      "type": "Microsoft.Compute/virtualMachines",
+      "apiVersion": "[variables('computeApiVersion')]",
+      "location": "[resourceGroup().location]",
+      "copy": {
+        "name": "virtualMachineLoop",
+        "count": "[parameters('nodeDBCount')]"
+      },
+      "tags": {
+        "displayName": "VirtualMachine"
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Compute/availabilitySets/', variables('availabilitySetNameDB'))]",
+        "[concat('Microsoft.Storage/storageAccounts/', variables('vhdDBStorageName'))]",
+        "[concat('Microsoft.Network/networkInterfaces/', variables('nicNameDB'), copyindex())]"
+      ],
+      "properties": {
+        "availabilitySet": {
+          "id": "[resourceId('Microsoft.Compute/availabilitySets', variables('availabilitySetNameDB'))]"
+        },
+        "hardwareProfile": {
+          "vmSize": "[parameters('vmDBSize')]"
+        },
+        "osProfile": {
+          "computerName": "[variables('vmDBName')]",
+          "adminUsername": "[parameters('adminUsername')]",
+          "adminPassword": "[parameters('adminPassword')]"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "[variables('imagePublisher')]",
+            "offer": "[variables('imageOffer')]",
+            "sku": "[parameters('ubuntuOSVersion')]",
+            "version": "latest"
+          },
+          "osDisk": {
+            "name": "osdisk",
+            "vhd": {
+              "uri": "[concat('http://', variables('vhdDBStorageName'),'.blob.core.windows.net/', variables('vhdStorageContainerName'), '/', variables('OSDiskName'), copyIndex(), '.vhd')]"
+            },
+            "caching": "ReadWrite",
+            "createOption": "FromImage"
+          },
+          "dataDisks": [
+            {
+              "name": "datadisk1",
+              "diskSizeGB": "1000",
+              "lun": 0,
               "vhd": {
-                "uri": "[concat('http://', variables('vhdDBStorageName'),'.blob.core.windows.net/', variables('vhdStorageContainerName'), '/', variables('OSDiskName'), copyIndex(), '.vhd')]"
+                "uri": "[concat('http://', variables('vhdDBStorageName'),'.blob.core.windows.net/vm', copyIndex(), 'lun/', variables('DataDiskName'), '01.vhd')]"
               },
-              "caching": "ReadWrite",
-              "createOption": "FromImage"
+              "createOption": "Empty"
             },
-            "dataDisks": [
-              {
-                "name": "datadisk1",
-                "diskSizeGB": "1000",
-                "lun": 0,
-                "vhd": {
-                  "uri": "[concat('http://', variables('vhdDBStorageName'),'.blob.core.windows.net/vm', copyIndex(), 'lun/', variables('DataDiskName'), '01.vhd')]"
-                },
-                "createOption": "Empty"
+            {
+              "name": "datadisk2",
+              "diskSizeGB": "1000",
+              "lun": 1,
+              "vhd": {
+                "uri": "[concat('http://', variables('vhdDBStorageName'),'.blob.core.windows.net/vm', copyIndex(), 'lun/', variables('DataDiskName'), '02.vhd')]"
               },
-              {
-                "name": "datadisk2",
-                "diskSizeGB": "1000",
-                "lun": 1,
-                "vhd": {
-                  "uri": "[concat('http://', variables('vhdDBStorageName'),'.blob.core.windows.net/vm', copyIndex(), 'lun/', variables('DataDiskName'), '02.vhd')]"
-                },
-                "createOption": "Empty"
-              }
-            ]
-          },
-          "networkProfile": {
-            "networkInterfaces": [
-              {
-                "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('nicNameDB'), copyindex()))]"
-              }
-            ]
-          }
-        }
-      },
-      {
-        "type": "Microsoft.Compute/virtualMachines/extensions",
-        "name": "[concat(variables('vmDBName'), sub(parameters('nodeDBCount'),1), '/setupGaleraCluster')]",
-        "apiVersion": "[variables('computeApiVersion')]",
-        "location": "[resourceGroup().location]",
-        "dependsOn": [
-          "[concat('Microsoft.Compute/virtualMachines/', variables('vmDBName'),sub(parameters('nodeDBCount'),1))]"
-        ],
-        "properties": {
-          "publisher": "Microsoft.OSTCExtensions",
-          "type": "CustomScriptForLinux",
-          "typeHandlerVersion": "1.4",
-          "settings": {
-            "fileUris": [
-              "[variables('customScriptFilePathDB')]"
-            ]
-          },
-          "protectedSettings": {
-            "commandToExecute": "[concat(variables('customScriptCommandToExecuteDB'),' ', parameters('nodeDBCount'), ' ', parameters('mySQLrootPassword'),' ',variables('subnetIPBase'))]"
-          }
-        }
-      },
-      {
-        "type": "Microsoft.Compute/virtualMachines/extensions",
-        "name": "[concat(variables('vmDBName'), copyIndex(), '/setupGaleraCluster')]",
-        "apiVersion": "[variables('computeApiVersion')]",
-        "location": "[resourceGroup().location]",
-        "copy": {
-          "name": "virtualMachineExtLoop",
-          "count": "[sub(parameters('nodeDBCount'),1)]"
+              "createOption": "Empty"
+            }
+          ]
         },
-        "dependsOn": [
-          "[concat('Microsoft.Compute/virtualMachines/', variables('vmDBName'),copyIndex())]",
-          "[concat('Microsoft.Compute/virtualMachines/', variables('vmDBName'),sub(parameters('nodeDBCount'),1),'/extensions/setupGaleraCluster')]"
-        ],
-        "properties": {
-          "publisher": "Microsoft.OSTCExtensions",
-          "type": "CustomScriptForLinux",
-          "typeHandlerVersion": "1.4",
-          "settings": {
-            "fileUris": [
-              "[variables('customScriptFilePathDB')]"
-            ]
-          },
-          "protectedSettings": {
-            "commandToExecute": "[concat(variables('customScriptCommandToExecuteDB'),' ', parameters('nodeDBCount'), ' ', parameters('mySQLrootPassword'),' ',variables('subnetIPBase'))]"
-          }
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('nicNameDB'), copyindex()))]"
+            }
+          ]
         }
       }
-      ]
+    },
+    {
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "name": "[concat(variables('vmDBName'), sub(parameters('nodeDBCount'),1), '/setupGaleraCluster')]",
+      "apiVersion": "[variables('computeApiVersion')]",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[concat('Microsoft.Compute/virtualMachines/', variables('vmDBName'),sub(parameters('nodeDBCount'),1))]"
+      ],
+      "properties": {
+        "publisher": "Microsoft.OSTCExtensions",
+        "type": "CustomScriptForLinux",
+        "typeHandlerVersion": "1.4",
+        "settings": {
+          "fileUris": [
+            "[variables('customScriptFilePathDB')]"
+          ]
+        },
+        "protectedSettings": {
+          "commandToExecute": "[concat(variables('customScriptCommandToExecuteDB'),' ', parameters('nodeDBCount'), ' ', parameters('mySQLrootPassword'),' ',variables('subnetIPBase'))]"
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "name": "[concat(variables('vmDBName'), copyIndex(), '/setupGaleraCluster')]",
+      "apiVersion": "[variables('computeApiVersion')]",
+      "location": "[resourceGroup().location]",
+      "copy": {
+        "name": "virtualMachineExtLoop",
+        "count": "[sub(parameters('nodeDBCount'),1)]"
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Compute/virtualMachines/', variables('vmDBName'),copyIndex())]",
+        "[concat('Microsoft.Compute/virtualMachines/', variables('vmDBName'),sub(parameters('nodeDBCount'),1),'/extensions/setupGaleraCluster')]"
+      ],
+      "properties": {
+        "publisher": "Microsoft.OSTCExtensions",
+        "type": "CustomScriptForLinux",
+        "typeHandlerVersion": "1.4",
+        "settings": {
+          "fileUris": [
+            "[variables('customScriptFilePathDB')]"
+          ]
+        },
+        "protectedSettings": {
+          "commandToExecute": "[concat(variables('customScriptCommandToExecuteDB'),' ', parameters('nodeDBCount'), ' ', parameters('mySQLrootPassword'),' ',variables('subnetIPBase'))]"
+        }
+      }
+    }
+  ]
     }

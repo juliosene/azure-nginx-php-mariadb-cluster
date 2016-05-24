@@ -243,6 +243,21 @@
         "provisioningState": "Succeeded",
         "securityRules": [
           {
+            "name": "WebApp",
+            "properties": {
+              "provisioningState": "Succeeded",
+              "description": "Allow Web Access",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "3306",
+              "sourceAddressPrefix": "Internet",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 103,
+              "direction": "Inbound"
+            }
+          },
+          {
             "name": "MySQL",
             "properties": {
               "provisioningState": "Succeeded",
